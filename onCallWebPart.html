@@ -1,0 +1,114 @@
+Who's on call: <br>
+For this week (<script>var dateToWrite = new Date();
+				document.write(Date());</script>):  <u><div style="display:inline;" id="thisWeek";></div></u><br>
+For next week: <u><div style="display:inline;" id="nextWeek"></div></u><br>
+For last week: <u><div style="display:inline;" id="lastWeek"></div></u><br>
+<a href="www.google.com">click here</a>
+<script type="text/javascript">
+
+
+function findOnCallInfo(date)
+{
+
+	var excel = new ActiveXObject("Excel.Application");
+	var excelFile = excel.Workbooks.Open("https://sharetest.allstate.com/sites/PC/Production%20Support%20Documentation/On%20Call%20Documentation/On%20Call%20Rota%202014.xlsx");
+	var excelSheet =excelFile.Worksheets.Item(1);
+	
+	var d = date // current date
+	var monthNames = [ "January", "February", "March", "April", "May", "June",		//keep track of month names
+    "July", "August", "September", "October", "November", "December" ];
+
+	
+	var month = monthNames[d.getMonth()];
+	var day = d.getDate();
+	
+	var row = 4;
+	var col = 216;		//where the dates start
+	var excelData;
+	var monthFound;
+	while(col<100000) 		//"infinite loop"
+	{
+		excelData = excelSheet.Cells(row,col).Value;		//looking through months to find the current month
+	//	console.log("col: "+ col + "   " + excelData + " = " + month.toUpperCase()); //debugging
+		if(excelData==null) 
+		{
+			col++;
+			
+		}
+		else if(excelData.toUpperCase() == month.toUpperCase()) 	//if the current month matches the one on the spreadsheet, we're in the right area.
+		{
+			monthFound = excelData;
+			break;	//found the current month in the spreadsheet
+		}
+		else
+			col++;
+		
+			
+	
+	}
+	
+	//
+	var numberOfTheWeek = excelSheet.Cells(6,col).Value;		//move down two rows to the number of the week 
+	var dayFound;
+	while(col<100000)
+	{
+		excelData = excelSheet.Cells(6, col).Value;
+		if(excelData==null) 
+		{
+			col++;
+			
+		}
+		else if(excelData == day)		//if the current day matches the one on the spreadsheet, we're in the right area
+		{
+			dayFound = excelData;
+			break;		//found the current day in the spreadsheet
+		}
+		else
+			col++;
+	
+	
+	}
+	
+	
+	var onCallName;
+	while(row<35) //"infinite loop"
+	{
+		excelData = excelSheet.Cells(row, col);
+		if(excelData==null)
+		{
+			row++;	
+		}
+		else if(excelData == "P")
+		{
+			onCallName = excelSheet.Cells(row, 1);
+			break;
+		}
+		else
+			row++;
+	
+	
+	}
+	var today = new Date();
+	if(date.getDate() < today.getDate())
+		document.getElementById("lastWeek").innerText = onCallName;
+	else if(date.getDate() > today.getDate())
+		document.getElementById("nextWeek").innerText = onCallName;
+	else
+		document.getElementById("thisWeek").innerText = onCallName;
+};
+
+
+window.onload = function()
+{
+
+	var date = new Date();
+	var nextWeek = new Date
+		nextWeek.setDate(nextWeek.getDate() + 7);
+	var lastWeek = new Date
+		lastWeek.setDate(lastWeek.getDate() - 7);
+		findOnCallInfo(date);
+		findOnCallInfo(nextWeek);
+		findOnCallInfo(lastWeek);
+	
+}
+</script>
